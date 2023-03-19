@@ -33,20 +33,22 @@ An exhaustive description of the library.
 
 # :notebook: Summary
 
-* [Installation](#installation)
-* [Setup](#setup)
-* [Usage](#usage)
-  * [LibraryNameService](#librarynameservice)
-* [Schematics](#schematics)
+- [Installation](#installation)
+- [Setup](#setup)
+- [Usage](#usage)
+  - [LibraryNameService](#librarynameservice)
+- [Schematics](#schematics)
 
 # :package: Installation
 
-* :cat2: Using Nest CLI:
+- :cat2: Using Nest CLI:
+
 ```
 nest add nestjs-library-starter
 ```
 
-* :package: Using Package Manager: 
+- :package: Using Package Manager:
+
 ```
 npm install --save nestjs-library-starter
 ```
@@ -76,9 +78,9 @@ export class AppModule {}
 
 ## :control_knobs: Config
 
-| Value | Type | Default | Description |
-| --- | --- | --- | --- |
-| value | __string__ | `<DEFAULT>` | A powerful value |
+| Value | Type       | Default     | Description      |
+| ----- | ---------- | ----------- | ---------------- |
+| value | **string** | `<DEFAULT>` | A powerful value |
 
 # :books: Usage
 
@@ -88,9 +90,9 @@ Explain your library usage.
 
 A service with an awesome & helpul functionallity.
 
-| Method | Signature | Description |
-| --- | --- | --- |
-printConfig | __config__: `LibraryNameConfig` | Prints a provided _configuration_ |
+| Method      | Signature                       | Description                       |
+| ----------- | ------------------------------- | --------------------------------- |
+| printConfig | **config**: `LibraryNameConfig` | Prints a provided _configuration_ |
 
 # :art: Schematics
 
@@ -104,6 +106,6 @@ nest g <schematic> [params] --collection nestjs-library-starter
 
 > Prints a cute cat.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| __catType__ | _string_ | Default | Type of cat to print.
+| Parameter   | Type     | Default | Description           |
+| ----------- | -------- | ------- | --------------------- |
+| **catType** | _string_ | Default | Type of cat to print. |
