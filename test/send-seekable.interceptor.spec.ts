@@ -1,8 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { default as request } from 'supertest';
 import { Ranges } from 'range-parser';
-import { createReadStream } from 'fs';
-import path from 'path';
 import {
   createTestApp,
   createTestStream,
@@ -11,6 +9,7 @@ import {
 } from './helpers';
 import { SendSeekableContent } from '../src';
 import parseRange = require('range-parser');
+import { Readable } from 'stream';
 
 const contentString = 'Lorem ipsum dolor sit amet';
 
@@ -27,6 +26,20 @@ describe('SendSeekableInterceptor', () => {
       contentFn: () => createTestStream(),
       length: contentString.length,
     });
+  });
+
+  it('fails with 500 if the given content is not a buffer or stream', async () => {
+    const app = await createTestApp({} as Readable, {
+      length: 1,
+    });
+
+    await request(app.getHttpServer()).get('/').expect(500);
+  });
+
+  it('fails with 500 if the route result is not a SendSeekableResponse', async () => {
+    const app = await createTestApp(Buffer.from(contentString));
+
+    await request(app.getHttpServer()).get('/invalid').expect(500);
   });
 
   function testContent({
@@ -87,6 +100,17 @@ describe('SendSeekableInterceptor', () => {
         )
         .expect('Content-Length', length.toString())
         .expect('Content-Type', 'audio/mp3')
+        .expect(expectInvariantResponse)
+        .expect(expectNoContentRange);
+    });
+
+    it('responds to GET request with full content if range unit is not bytes', async () => {
+      await request(app.getHttpServer())
+        .get('/')
+        .set('Range', 'nonBytes=0-10')
+        .expect(200)
+        .expect(contentString)
+        .expect('Content-Length', length.toString())
         .expect(expectInvariantResponse)
         .expect(expectNoContentRange);
     });
