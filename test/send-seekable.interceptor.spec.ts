@@ -8,7 +8,7 @@ import {
   expectNoContentRange,
 } from './helpers';
 import { SendSeekableContent } from '../src';
-import parseRange = require('range-parser');
+import parseRange from 'range-parser';
 import { Readable } from 'stream';
 
 const contentString = 'Lorem ipsum dolor sit amet';
