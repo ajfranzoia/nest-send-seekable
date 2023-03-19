@@ -16,6 +16,7 @@ export async function createTestApp(
   class TestController {
     @Get('/')
     @UseInterceptors(SendSeekableInterceptor)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async route(@Res() res: express.Response) {
       return new SendSeekableResponse(content, config);
     }

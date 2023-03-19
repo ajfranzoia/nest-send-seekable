@@ -1,11 +1,11 @@
 import { INestApplication } from '@nestjs/common';
 import { default as request } from 'supertest';
-import { SendSeekableInterceptor } from '../src';
 import { Ranges } from 'range-parser';
 import { createReadStream } from 'fs';
 import path from 'path';
 import { createTestApp, expectInvariantResponse } from './helpers';
 import parseRange = require('range-parser');
+import { SendSeekableContent } from '../src';
 
 const contentString = 'Lorem ipsum dolor sit amet';
 
@@ -28,7 +28,7 @@ describe('SendSeekableInterceptor', () => {
     contentFn,
     length,
   }: {
-    contentFn: () => any;
+    contentFn: () => SendSeekableContent;
     length: number;
   }) {
     let app: INestApplication;
@@ -88,8 +88,6 @@ describe('SendSeekableInterceptor', () => {
 
         const trueFirst = range[0].start;
         const trueLast = range[0].end;
-
-        const type = 'random string ' + Math.random() * 999;
 
         const body = contentString.slice(trueFirst, trueLast + 1);
 
