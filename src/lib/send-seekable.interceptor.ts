@@ -14,7 +14,7 @@ import { SendSeekableResponse } from './send-seekable.response';
 export class SendSeekableInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
-      map(data => {
+      map((data) => {
         if (!(data instanceof SendSeekableResponse)) {
           throw new Error('Data must be an instance of SendSeekableResponse');
         }
@@ -76,6 +76,6 @@ export class SendSeekableInterceptor implements NestInterceptor {
     res.set('Content-Range', 'bytes ' + start + '-' + end + '/' + length);
 
     // slicing the stream to partial content
-    return stream.pipe(rangeStream(start, end));
+    return stream.pipe(rangeStream(start, end)).pipe(res);
   }
 }
