@@ -41,5 +41,5 @@ export function expectInvariantResponse(res: express.Response) {
 }
 
 export function expectNoContentRange(res: express.Response) {
-  expect(expect(res.get('content-range')).toBeUndefined());
+  expect(expect(res.get('Content-Range')).toBeUndefined());
 }

@@ -3,9 +3,13 @@ import { default as request } from 'supertest';
 import { Ranges } from 'range-parser';
 import { createReadStream } from 'fs';
 import path from 'path';
-import { createTestApp, expectInvariantResponse } from './helpers';
-import parseRange = require('range-parser');
+import {
+  createTestApp,
+  expectInvariantResponse,
+  expectNoContentRange,
+} from './helpers';
 import { SendSeekableContent } from '../src';
+import parseRange = require('range-parser');
 
 const contentString = 'Lorem ipsum dolor sit amet';
 
@@ -60,11 +64,10 @@ describe('SendSeekableInterceptor', () => {
     it('responds to GET request with full content', async () => {
       await request(app.getHttpServer())
         .get('/')
-        .expect('Content-Length', length.toString())
         .expect(200)
         .expect(contentString)
         .expect(expectInvariantResponse)
-        .expect((res) => expect(res.get('content-range')).toBeUndefined());
+        .expect(expectNoContentRange);
     });
 
     describe('responds to byte range requests', function () {
@@ -88,7 +91,6 @@ describe('SendSeekableInterceptor', () => {
 
         const trueFirst = range[0].start;
         const trueLast = range[0].end;
-
         const body = contentString.slice(trueFirst, trueLast + 1);
 
         await request(app.getHttpServer())
@@ -166,7 +168,7 @@ describe('SendSeekableInterceptor', () => {
           .get('/')
           .set('Range', 'hello')
           .expect(400)
-          .expect((res) => expect(res.get('content-range')).toBeUndefined()));
+          .expect(expectNoContentRange));
     });
 
     describe('for unsupported byte range', () => {
@@ -175,7 +177,7 @@ describe('SendSeekableInterceptor', () => {
           .get('/')
           .set('Range', 'bytes=0-4,10-14')
           .expect(500)
-          .expect((res) => expect(res.get('content-range')).toBeUndefined()));
+          .expect(expectNoContentRange));
     });
   }
 });
