@@ -5,6 +5,7 @@ import { createReadStream } from 'fs';
 import path from 'path';
 import {
   createTestApp,
+  createTestStream,
   expectInvariantResponse,
   expectNoContentRange,
 } from './helpers';
@@ -23,7 +24,7 @@ describe('SendSeekableInterceptor', () => {
 
   describe('when passed a stream', () => {
     testContent({
-      contentFn: () => createReadStream(path.join(__dirname, 'content.txt')),
+      contentFn: () => createTestStream(),
       length: contentString.length,
     });
   });

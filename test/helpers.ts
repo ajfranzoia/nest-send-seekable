@@ -7,6 +7,8 @@ import {
 import { Controller, Get, Res, UseInterceptors } from '@nestjs/common';
 import express from 'express';
 import { Test } from '@nestjs/testing';
+import { createReadStream } from 'fs';
+import path from 'path';
 
 export async function createTestApp(
   content: SendSeekableContent,
@@ -17,8 +19,14 @@ export async function createTestApp(
     @Get('/')
     @UseInterceptors(SendSeekableInterceptor)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async route(@Res() res: express.Response) {
+    async okRoute(@Res() res: express.Response) {
       return new SendSeekableResponse(content, config);
+    }
+
+    @Get('/invalid')
+    @UseInterceptors(SendSeekableInterceptor)
+    async invalidRoute() {
+      return 'This is not a valid content';
     }
   }
 
@@ -42,4 +50,8 @@ export function expectInvariantResponse(res: express.Response) {
 
 export function expectNoContentRange(res: express.Response) {
   expect(expect(res.get('Content-Range')).toBeUndefined());
+}
+
+export function createTestStream() {
+  return createReadStream(path.join(__dirname, 'content.txt'));
 }
