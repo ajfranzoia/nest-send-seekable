@@ -66,6 +66,26 @@ describe('SendSeekableInterceptor', () => {
         .get('/')
         .expect(200)
         .expect(contentString)
+        .expect('Content-Length', length.toString())
+        .expect(expectInvariantResponse)
+        .expect(expectNoContentRange);
+    });
+
+    it('responds to GET request with Content-Type header', async () => {
+      await app.close();
+      app = await createTestApp(contentFn(), {
+        length,
+        contentType: 'audio/mp3',
+      });
+
+      await request(app.getHttpServer())
+        .get('/')
+        .expect(200)
+        .expect((res) =>
+          expect(Buffer.from(contentString).equals(res.body)).toBeTruthy(),
+        )
+        .expect('Content-Length', length.toString())
+        .expect('Content-Type', 'audio/mp3')
         .expect(expectInvariantResponse)
         .expect(expectNoContentRange);
     });
