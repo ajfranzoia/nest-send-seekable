@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { default as request } from 'supertest';
-import { Ranges } from 'range-parser';
+import parseRange, { Ranges } from 'range-parser';
 import {
   createTestApp,
   createTestStream,
@@ -8,7 +8,6 @@ import {
   expectNoContentRange,
 } from './helpers';
 import { SendSeekableContent } from '../src';
-import parseRange = require('range-parser');
 import { Readable } from 'stream';
 
 const contentString = 'Lorem ipsum dolor sit amet';
@@ -36,10 +35,14 @@ describe('SendSeekableInterceptor', () => {
     await request(app.getHttpServer()).get('/').expect(500);
   });
 
-  it('fails with 500 if the route result is not a SendSeekableResponse', async () => {
+  it('returns data with no modifications if it is not a SendSeekableResponse', async () => {
     const app = await createTestApp(Buffer.from(contentString));
 
-    await request(app.getHttpServer()).get('/invalid').expect(500);
+    await request(app.getHttpServer())
+      .get('/other')
+      .expect(200)
+      .expect('Other data')
+      .expect(expectNoContentRange);
   });
 
   function testContent({
