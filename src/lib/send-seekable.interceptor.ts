@@ -16,7 +16,7 @@ export class SendSeekableInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((data) => {
         if (!(data instanceof SendSeekableResponse)) {
-          throw new Error('Data must be an instance of SendSeekableResponse');
+          return data;
         }
 
         return this.sendSeekable(context, data);
