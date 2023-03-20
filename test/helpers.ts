@@ -15,18 +15,17 @@ export async function createTestApp(
   config?: SendSeekableConfig,
 ) {
   @Controller('/')
+  @UseInterceptors(SendSeekableInterceptor)
   class TestController {
     @Get('/')
-    @UseInterceptors(SendSeekableInterceptor)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async okRoute(@Res() res: express.Response) {
       return new SendSeekableResponse(content, config);
     }
 
-    @Get('/invalid')
-    @UseInterceptors(SendSeekableInterceptor)
-    async invalidRoute() {
-      return 'This is not a valid content';
+    @Get('/other')
+    async other() {
+      return 'Other data';
     }
   }
 
